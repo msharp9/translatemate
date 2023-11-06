@@ -25,14 +25,12 @@ android {
         }
         python {
             version "3.8"
+            buildPython "/Users/matt.sharp/miniconda3/envs/py38/bin/python"
         }
 
         python {
             pip {
-                install "accelerate"
-                install "soundfile"
-                install "optimum"
-                install "transformers"
+                install "transformers==4.15.0"
             }
         }
 
@@ -46,7 +44,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            minifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
