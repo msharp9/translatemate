@@ -1,22 +1,25 @@
+from os.path import dirname, join
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
-from datasets import load_dataset
 
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
 
-processor = AutoProcessor.from_pretrained("distil-whisper/distil-large-v2")
+path = join(dirname(__file__), "nllb-200-distilled-600M")
+tokenizer = AutoTokenizer.from_pretrained("../assets/nllb-200-distilled-600M")
+nllb_model = AutoModelForSeq2SeqLM.from_pretrained("../assets/nllb-200-distilled-600M")
+nllb_model = nllb_model.to_bettertransformer()
+
+
+path = join(dirname(__file__), "distil-whisper")
+processor = AutoProcessor.from_pretrained(path)
 whisper_model = AutoModelForSpeechSeq2Seq.from_pretrained(
-    "distil-whisper/distil-large-v2", torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
+    path, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
 )
 whisper_model = whisper_model.to_bettertransformer()
 whisper_model.to(device)
-
-tokenizer = AutoTokenizer.from_pretrained("facebook/nllb-200-distilled-600M")
-nllb_model = AutoModelForSeq2SeqLM.from_pretrained("facebook/nllb-200-distilled-600M")
-nllb_model = nllb_model.to_bettertransformer()
 
 pipe = pipeline(
     "automatic-speech-recognition",

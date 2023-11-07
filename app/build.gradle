@@ -30,7 +30,9 @@ android {
 
         python {
             pip {
+                install "torch"
                 install "transformers==4.15.0"
+                install "soundfile"
             }
         }
 

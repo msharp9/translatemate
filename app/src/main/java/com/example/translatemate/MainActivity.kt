@@ -56,6 +56,14 @@ class MainActivity : ComponentActivity() {
             // Define a valid file path within your app's cache directory
             val audioFilePath: String = "${externalCacheDir?.absolutePath}/audio.3gp"
 
+            //Starting python interpreter.
+            if (!Python.isStarted()) {
+                Python.start(AndroidPlatform(this))
+            }
+            //Getting python interpreter instance.
+            val py: Python = Python.getInstance()
+            //Creating the object of python source file yolo_module.
+            val pyo: PyObject = py.getModule("translate")
 
 
             Column(
@@ -89,15 +97,6 @@ class MainActivity : ComponentActivity() {
                                 start()
                             }
 
-                            //Starting python interpreter.
-                            if (!Python.isStarted()) {
-                                Python.start(AndroidPlatform(this))
-                            }
-
-                            //Getting python interpreter instance.
-                            val py: Python = Python.getInstance()
-                            //Creating the object of python source file yolo_module.
-                            val pyo: PyObject = py.getModule("translate")
                             //Calling function detect_and_draw from module.
                             val obj: PyObject = pyo.callAttr("translate_english_audio_to_chinese_text", audioFilePath)
 
