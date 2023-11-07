@@ -8,8 +8,8 @@ torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
 
 path = join(dirname(__file__), "nllb-200-distilled-600M")
-tokenizer = AutoTokenizer.from_pretrained("../assets/nllb-200-distilled-600M")
-nllb_model = AutoModelForSeq2SeqLM.from_pretrained("../assets/nllb-200-distilled-600M")
+tokenizer = AutoTokenizer.from_pretrained(path)
+nllb_model = AutoModelForSeq2SeqLM.from_pretrained(path)
 nllb_model = nllb_model.to_bettertransformer()
 
 
