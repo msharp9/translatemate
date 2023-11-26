@@ -1,6 +1,6 @@
 from os.path import dirname, join
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
+from transformers import WhisperProcessor, WhisperForConditionalGeneration, NllbTokenizerFast, M2M100ForConditionalGeneration, pipeline
 
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
@@ -8,14 +8,14 @@ torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
 
 path = join(dirname(__file__), "nllb-200-distilled-600M")
-tokenizer = AutoTokenizer.from_pretrained(path)
-nllb_model = AutoModelForSeq2SeqLM.from_pretrained(path)
+tokenizer = NllbTokenizerFast.from_pretrained(path)
+nllb_model = M2M100ForConditionalGeneration.from_pretrained(path)
 nllb_model = nllb_model.to_bettertransformer()
 
 
 path = join(dirname(__file__), "distil-whisper")
-processor = AutoProcessor.from_pretrained(path)
-whisper_model = AutoModelForSpeechSeq2Seq.from_pretrained(
+processor = WhisperProcessor.from_pretrained(path)
+whisper_model = WhisperForConditionalGeneration.from_pretrained(
     path, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
 )
 whisper_model = whisper_model.to_bettertransformer()
